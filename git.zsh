@@ -105,6 +105,8 @@ function gd() {
     else git difftool $1 $2 -- "$file" && gd $1 $2;
     fi
 }
+
+autoload -U compinit; compinit
 function _MINE_git_branch_names() {
     compadd "${(@)${(f)$(git branch -a)}#??}"
 }
