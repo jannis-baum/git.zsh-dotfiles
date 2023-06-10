@@ -139,8 +139,8 @@ function gl() {
 
     out=$(git log --oneline --decorate --color=always $logargs \
         | fzf --delimiter=' ' --with-nth='2..' --no-sort --exact --ansi --expect=ctrl-r,ctrl-o \
-            --preview 'zsh -c "source $ZDOTDIR/scripts/git/_helpers.zsh 2> /dev/null;
-                _git_pretty_diff $(git log --pretty=%P -n 1 {1}) {1} | less -R"' \
+            --preview "zsh -c '$(which _git_pretty_diff);
+                "$'_git_pretty_diff $(git log --pretty=%P -n 1 {1}) {1} | less -R\'' \
             --preview-window='60%,nowrap,nohidden')
 
     key=$(head -1 <<< $out)
