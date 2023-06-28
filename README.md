@@ -5,7 +5,10 @@ This repository holds all my git and GitHub related zsh functions that let me
 
 To use them, simply source all `.zsh` files from this repo in your `.zshrc`. I
 do this by keeping this repository as a submodule in my
-  [dotfiles](https://github.com/jannis-baum/dotfiles.git).
+[dotfiles](https://github.com/jannis-baum/dotfiles.git). If you want to do
+this, I recommend using my tool
+[`sdf`](https://github.com/jannis-baum/sync-dotfiles.zsh) to manage your
+dotfiles and their dependencies.
 
 ## Example features
 
