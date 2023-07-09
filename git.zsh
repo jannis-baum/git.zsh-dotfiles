@@ -177,9 +177,10 @@ function gsm() {
     repo_dir=$(git -C "$repo_dir" rev-parse --show-toplevel)
     [[ -f "$repo_dir/.gitmodules" ]] || return
 
-    local target=$(\
-        rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules" \
-            | fzf)
+    local submodules=$(rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules")
+    local target=$(echo "$repo_dir\n$submodules" | fzf)
     [[ -z "$target" ]] && return
-    cd "$repo_dir/$target"
+
+    [[ "$target" == /* ]] || target="$repo_dir/$target"
+    cd "$target"
 }
