@@ -178,9 +178,10 @@ function gsm() {
     [[ -f "$repo_dir/.gitmodules" ]] || return
 
     local submodules=$(rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules")
-    local target=$(echo "$repo_dir\n$submodules" | fzf)
+    local target=$(echo ".\n$submodules" | fzf \
+        --preview-window="nohidden" \
+        --preview "COLOR=always git -C '$repo_dir/{}' --config-env=color.status=COLOR status -s")
     [[ -z "$target" ]] && return
 
-    [[ "$target" == /* ]] || target="$repo_dir/$target"
-    cd "$target"
+    cd "$repo_dir/$target"
 }
