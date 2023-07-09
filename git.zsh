@@ -165,3 +165,21 @@ function gprune-branches() {
         | awk '{ print $1 }' \
         | xargs -r git branch $flag
 }
+
+# switch directory to a(nother) submodule of root repo
+function gsm() {
+    local repo_dir="$(pwd)"
+    while true; do
+        local super_dir="$(git -C "$repo_dir" rev-parse --show-superproject-working-tree)"
+        [[ -z "$super_dir" ]] && break
+        repo_dir="$super_dir"
+    done
+    repo_dir=$(git -C "$repo_dir" rev-parse --show-toplevel)
+    [[ -f "$repo_dir/.gitmodules" ]] || return
+
+    local target=$(\
+        rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules" \
+            | fzf)
+    [[ -z "$target" ]] && return
+    cd "$repo_dir/$target"
+}
