@@ -168,20 +168,36 @@ function gprune-branches() {
 
 # switch directory to a(nother) submodule of root repo
 function gsm() {
+    # traverse to super repo until topmost is reached
     local repo_dir="$(pwd)"
     while true; do
         local super_dir="$(git -C "$repo_dir" rev-parse --show-superproject-working-tree)"
         [[ -z "$super_dir" ]] && break
         repo_dir="$super_dir"
     done
+    # root repo dir
     repo_dir=$(git -C "$repo_dir" rev-parse --show-toplevel)
     [[ -f "$repo_dir/.gitmodules" ]] || return
 
-    local submodules=$(rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules")
-    local target=$(echo ".\n$submodules" | fzf \
-        --preview-window="nohidden" \
-        --preview "COLOR=always git -C '$repo_dir/{}' --config-env=color.status=COLOR status -s")
-    [[ -z "$target" ]] && return
+    # read .gitmodules and label status for each
+    local modules=( . )
+    modules+=(${(f)"$(rg --no-line-number --replace '' '^\s*path ?= ?' "$repo_dir/.gitmodules")"})
+    local -a labels
+    for m in $modules; do
+        [[ -z $(git -C "$repo_dir/$m" status -s) ]] \
+            && labels+=("  $m") \
+            || labels+=("✻ $m")
+    done
 
+    local out=$(\
+        paste -d ":" <(echo ${(F)modules}) <(echo ${(F)labels}) \
+            | sort --field-separator=":" --reverse --key=2 \
+            | fzf \
+                --delimiter=":" --with-nth="2" --nth="1" \
+                --preview-window="nohidden" \
+                --preview "COLOR=always git -C '$repo_dir/{1}' --config-env=color.status=COLOR status")
+    [[ -z "$out" ]] && return
+
+    local target=$(sed 's/:.*$//'<<< $out)
     cd "$repo_dir/$target"
 }
