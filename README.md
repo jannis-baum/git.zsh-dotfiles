@@ -39,3 +39,4 @@ Check out the commented `.zsh` files for more detailed info!
 - `git`, of course
 - [`fzf`](https://github.com/junegunn/fzf)
 - [the GitHub CLI](https://cli.github.com/)
+- [ripgrep (`rg`)](https://github.com/BurntSushi/ripgrep)
