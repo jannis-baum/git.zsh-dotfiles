@@ -36,7 +36,15 @@ Check out the commented `.zsh` files for more detailed info!
 
 ## Requirements
 
+To use these all features, you need to have the following tools installed and in
+your `$PATH`.
+
 - `git`, of course
 - [`fzf`](https://github.com/junegunn/fzf)
 - [the GitHub CLI](https://cli.github.com/)
 - [ripgrep (`rg`)](https://github.com/BurntSushi/ripgrep)
+
+On top of these, this plugin relies on you having your `$EDITOR` variable set to
+whatever command you use to open your text editor. If you use
+[si-vim](https://github.com/jannis-baum/si-vim.zsh) for example, you should have
+`export EDITOR=siv` in your `.zshenv` file.
