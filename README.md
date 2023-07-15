@@ -3,13 +3,6 @@
 This repository holds all my git and GitHub related zsh functions that let me
 *blaze* through my workflow.
 
-To use them, simply source all `.zsh` files from this repo in your `.zshrc`. I
-do this by keeping this repository as a submodule in my
-[dotfiles](https://github.com/jannis-baum/dotfiles.git). If you want to do
-this, I recommend using my tool
-[`sdf`](https://github.com/jannis-baum/sync-dotfiles.zsh) to manage your
-dotfiles and their dependencies.
-
 ## Example features
 
 - `gsi`: interactive git status viewer with diff viewer, (un)staging toggles,
@@ -41,7 +34,11 @@ customize by setting variables in your `.zshrc`. See
 [`options.zsh`](./options.zsh) for the list of all keybindings and their default
 values.
 
-## Requirements
+## Usage
+
+Find instructions for how to use this plugin below
+
+### Requirements
 
 To use these all features, you need to have the following tools installed and in
 your `$PATH`.
@@ -55,3 +52,20 @@ On top of these, this plugin relies on you having your `$EDITOR` variable set to
 whatever command you use to open your text editor. If you use
 [si-vim](https://github.com/jannis-baum/si-vim.zsh) for example, you should have
 `export EDITOR=siv` in your `.zshenv` file.
+
+### Installation
+
+With all requirements available, simply source all `.zsh` files from this repo
+in your `.zshrc`, for example like this
+
+```zsh
+for script in $(find '<path to this repo>' -name '*.zsh'); do
+    source $script
+done
+```
+
+I do this by keeping this repository as a submodule in my
+[dotfiles](https://github.com/jannis-baum/dotfiles.git). If you want to do this,
+I recommend using my tool
+[`sdf`](https://github.com/jannis-baum/sync-dotfiles.zsh) to manage your
+dotfiles and their dependencies.
