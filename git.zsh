@@ -25,16 +25,17 @@ function gr() {
 }
 
 # interactive staging
-# - left arrow: toggle staging
-# - ctrl+r: prompt to reset changes
-# - ctrl+v: open diff view
-# - ctrl+o: commit
-# - ctrl+b: amend commit
+# - GDF_GSI_STAGE: toggle staging
+# - GDF_GSI_RESET: prompt to reset changes
+# - GDF_GSI_DIFF: open diff view
+# - GDF_GSI_COMMIT: commit
+# - GDF_GSI_AMEND: amend commit
 # - return: open file
 function gsi() {
     local out key file
     out=$(_git_interactive_status_helper \
-        | fzf --ansi --exit-0 --delimiter ':' --with-nth 2 --expect=left,ctrl-r,ctrl-v,ctrl-o,ctrl-b \
+        | fzf --ansi --exit-0 --delimiter ':' --with-nth 2 \
+            --expect=$GDF_GSI_STAGE,$GDF_GSI_RESET,$GDF_GSI_DIFF,$GDF_GSI_COMMIT,$GDF_GSI_AMEND \
             --preview="git diff --color=always HEAD -- {1} | tail -n +5" \
             --preview-window='60%,nowrap,nohidden')
 
@@ -43,11 +44,11 @@ function gsi() {
 
     [[ -z "$file" ]] && return
 
-    if [[ "$key" == left ]]; then; _git_toggle_staging $file && gsi
-    elif [[ "$key" == ctrl-r ]]; then; greset "$file" && gsi
-    elif [[ "$key" == ctrl-v ]]; then; git difftool HEAD -- "$file" && gsi
-    elif [[ "$key" == ctrl-o ]]; then; gc
-    elif [[ "$key" == ctrl-b ]]; then; gca
+    if [[ "$key" == $GDF_GSI_STAGE ]]; then; _git_toggle_staging $file && gsi
+    elif [[ "$key" == $GDF_GSI_RESET ]]; then; greset "$file" && gsi
+    elif [[ "$key" == $GDF_GSI_DIFF ]]; then; git difftool HEAD -- "$file" && gsi
+    elif [[ "$key" == $GDF_GSI_COMMIT ]]; then; gc
+    elif [[ "$key" == $GDF_GSI_AMEND ]]; then; gca
     else $EDITOR $file; fi
 }
 
@@ -85,12 +86,14 @@ function greset() {
 }
 
 # fzf to see diff to parent commit or between given commits
-# shows preview and opens difftool on return
-# offers zsh completion
+# - shows preview and opens difftool on return
+# - offers zsh completion
+# bindings
+# - GDF_GD_EDIT opens editor
 function gd() {
     local out key file
     out=$(_git_pretty_diff $1 $2 | sed '$d' \
-        | fzf --ansi --exit-0 --delimiter=' ' --expect=ctrl-o \
+        | fzf --ansi --exit-0 --delimiter=' ' --expect=$GDF_GD_EDIT \
             --preview="git diff --color=always $1 $2 -- $(git rev-parse --show-toplevel)/{2} | tail -n +5" \
             --preview-window='60%,nowrap,nohidden' \
         | sed -r 's/^. *([^[:blank:]]*) *\|.*$/\1/')
@@ -101,7 +104,7 @@ function gd() {
     [[ -z "$file" ]] && return
     file="$(git rev-parse --show-toplevel)/$file"
 
-    if [[ "$key" == ctrl-o ]]; then $EDITOR $file;
+    if [[ "$key" == $GDF_GD_EDIT ]]; then $EDITOR $file;
     else git difftool $1 $2 -- "$file" && gd $1 $2;
     fi
 }
@@ -119,8 +122,8 @@ compdef _MINE_git_branch_names gd
 #   - first arg -a or --all to avoid this
 # - otherwise passes args to git log
 # bindings:
-# - ctrl-r starts rebase from parent of selected commit
-# - ctrl-o copies commit hash
+# - GDF_GL_REBASE starts rebase from parent of selected commit
+# - GDF_GL_CPHASH copies commit hash
 # - return opens diff (gd, see above) between commit and parent
 function gl() {
     local commit hash key logargs
@@ -138,7 +141,7 @@ function gl() {
     fi
 
     out=$(git log --oneline --decorate --color=always $logargs \
-        | fzf --delimiter=' ' --with-nth='2..' --no-sort --exact --ansi --expect=ctrl-r,ctrl-o \
+        | fzf --delimiter=' ' --with-nth='2..' --no-sort --exact --ansi --expect=$GDF_GL_REBASE,$GDF_GL_CPHASH \
             --preview "zsh -c '$(which _git_pretty_diff);
                 "$'_git_pretty_diff $(git log --pretty=%P -n 1 {1}) {1} | less -R\'' \
             --preview-window='60%,nowrap,nohidden')
@@ -147,8 +150,8 @@ function gl() {
     hash=$(tail -n +2 <<< $out | sed 's/ .*$//')
 
     if [ -n "$hash" ]; then
-        if [[ "$key" == ctrl-r ]]; then git rebase -i $hash^;
-        elif [[ "$key" == ctrl-o ]]; then printf $hash | pbcopy;
+        if [[ "$key" == $GDF_GL_REBASE ]]; then git rebase -i $hash^;
+        elif [[ "$key" == $GDF_GL_CPHASH ]]; then printf $hash | pbcopy;
         else gd $(git log --pretty=%P -n 1 $hash) $hash; gl;
         fi
     fi

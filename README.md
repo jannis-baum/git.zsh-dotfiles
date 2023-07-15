@@ -34,6 +34,13 @@ dotfiles and their dependencies.
 
 Check out the commented `.zsh` files for more detailed info!
 
+## Configuration
+
+Some of the fzf-based functions such as `gsi` use fzf-keybindings that you can
+customize by setting variables in your `.zshrc`. See
+[`options.zsh`](./options.zsh) for the list of all keybindings and their default
+values.
+
 ## Requirements
 
 To use these all features, you need to have the following tools installed and in
