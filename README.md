@@ -40,8 +40,8 @@ Find instructions for how to use this plugin below
 
 ### Requirements
 
-To use these all features, you need to have the following tools installed and in
-your `$PATH`.
+To use all features, you need to have the following tools installed and in your
+`$PATH`.
 
 - `git`, of course
 - [`fzf`](https://github.com/junegunn/fzf)
