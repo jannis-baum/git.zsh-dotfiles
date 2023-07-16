@@ -34,19 +34,22 @@ function gr() {
 function gsi() {
     local out key file
     out=$(_git_interactive_status_helper \
-        | fzf --ansi --exit-0 --delimiter ':' --with-nth 2 \
+        | nl -ba -s: | sed 's/^[[:space:]]*//' \
+        | fzf --ansi --exit-0 --delimiter ':' --with-nth 3 --nth 3 \
+            --bind="start:pos($1)" \
             --expect=$GDF_GSI_STAGE,$GDF_GSI_RESET,$GDF_GSI_DIFF,$GDF_GSI_COMMIT,$GDF_GSI_AMEND \
-            --preview="git diff --color=always HEAD -- {1} | tail -n +5" \
+            --preview="git diff --color=always HEAD -- {2} | tail -n +5" \
             --preview-window='60%,nowrap,nohidden')
 
     key=$(head -1 <<< $out)
-    file=$(tail -n +2 <<< $out | sed -r 's/^([^:]*):.*$/\1/')
+    file=$(tail -n +2 <<< $out | cut -d: -f2)
+    pos=$(tail -n +2 <<< $out | cut -d: -f1)
 
     [[ -z "$file" ]] && return
 
-    if [[ "$key" == $GDF_GSI_STAGE ]]; then; _git_toggle_staging $file && gsi
-    elif [[ "$key" == $GDF_GSI_RESET ]]; then; greset "$file" && gsi
-    elif [[ "$key" == $GDF_GSI_DIFF ]]; then; git difftool HEAD -- "$file" && gsi
+    if [[ "$key" == $GDF_GSI_STAGE ]]; then; _git_toggle_staging $file && gsi $pos
+    elif [[ "$key" == $GDF_GSI_RESET ]]; then; greset "$file" && gsi $pos
+    elif [[ "$key" == $GDF_GSI_DIFF ]]; then; git difftool HEAD -- "$file" && gsi $pos
     elif [[ "$key" == $GDF_GSI_COMMIT ]]; then; gc
     elif [[ "$key" == $GDF_GSI_AMEND ]]; then; gca
     else $EDITOR $file; fi
