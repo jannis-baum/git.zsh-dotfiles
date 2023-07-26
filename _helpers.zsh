@@ -3,12 +3,10 @@ function _git_interactive_status_helper() {
     paste -d '\0' \
         <(git status --short \
             | sed -e 's/^...//' -e 's/$/:/' -e "s|^|$work_dir/|") \
-        <(COLOR=always git --config-env=color.status=COLOR status --short) \
-        <(git diff --stat=120 --color=always HEAD \
-            | sed '$d' \
-            | rev \
-            | sed -r 's/^(.*\|[[:blank:]]*)[^[:blank:]].*$/\1/' \
-            | rev)
+        <(COLOR=always git --config-env=color.status=COLOR status --short \
+            | cut -d' ' -f1-2) \
+        <(git diff --stat=$(bc -l <<< "r($COLUMNS * 0.4, 0) - 5") --color=always HEAD \
+            | sed '$d')
 }
 
 function _git_toggle_staging() {
