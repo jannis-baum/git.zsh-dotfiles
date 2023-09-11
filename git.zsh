@@ -35,7 +35,7 @@ function gsi() {
     local out key file
     out=$(_git_interactive_status_helper \
         | nl -ba -s: | sed 's/^[[:space:]]*//' \
-        | fzf --ansi --exit-0 --delimiter ':' --with-nth 3 --nth 3 \
+        | fzf --ansi --exit-0 --delimiter ':' --with-nth 3 \
             --bind="start:pos($1)" \
             --expect=$GDF_GSI_STAGE,$GDF_GSI_RESET,$GDF_GSI_DIFF,$GDF_GSI_COMMIT,$GDF_GSI_AMEND \
             --preview="git diff --color=always HEAD -- {2} | tail -n +5" \
