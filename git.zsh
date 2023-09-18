@@ -144,7 +144,8 @@ function gl() {
     fi
 
     out=$(git log --oneline --decorate --color=always $logargs \
-        | fzf --delimiter=' ' --with-nth='2..' --no-sort --exact --ansi --expect=$GDF_GL_REBASE,$GDF_GL_CPHASH \
+        | fzf --delimiter=' ' --with-nth='2..' --no-sort --track --exact --ansi \
+            --expect=$GDF_GL_REBASE,$GDF_GL_CPHASH \
             --preview "zsh -c '$(which _git_pretty_diff);
                 "$'_git_pretty_diff $(git log --pretty=%P -n 1 {1}) {1} | less -R\'' \
             --preview-window='60%,nowrap,nohidden')
