@@ -112,7 +112,6 @@ function gd() {
     fi
 }
 
-autoload -U compinit; compinit
 function _MINE_git_branch_names() {
     compadd "${(@)${(f)$(git branch -a)}#??}"
 }
