@@ -6,7 +6,7 @@ function ghi() {
     local out key issue
 
     out=$(GH_FORCE_TTY='45%' gh issue list --limit 100 \
-        | fzf --ansi --header-lines 3 --expect=$GDF_GHI_CPNUM,$GDF_GHI_BRANCH \
+        | fzf --ansi --header-lines 4 --expect=$GDF_GHI_CPNUM,$GDF_GHI_BRANCH \
             --preview-window='50%,nowrap,nohidden' \
             --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1}')
 
