@@ -155,7 +155,7 @@ function gl() {
     if [ -n "$hash" ]; then
         if [[ "$key" == $GDF_GL_REBASE ]]; then git rebase -i $hash^;
         elif [[ "$key" == $GDF_GL_CPHASH ]]; then printf $hash | pbcopy;
-        else gd $(git log --pretty=%P -n 1 $hash) $hash; gl;
+        else gd $(git log --pretty=%P -n 1 $hash) $hash; gl $*;
         fi
     fi
 }
