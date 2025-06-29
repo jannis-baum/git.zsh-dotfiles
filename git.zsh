@@ -132,7 +132,7 @@ function gl() {
 
     if [ -n "$*" ]; then
         [ "$1" = "-a" -o "$1" = "--all" ] \
-            && logargs="" || logargs="$1"
+            && logargs="" || logargs=($*)
     else
         local head_branch=""
         git rev-parse --verify main &>/dev/null \
