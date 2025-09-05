@@ -19,8 +19,8 @@ function _git_toggle_staging() {
 
 function _git_pretty_diff() {
     paste -d "\0" \
-        <(git diff --name-status $1 $2 | sed -r "s/^([^[:blank:]]).*\$/\\1/") \
-        <(git diff --stat=120 --color=always $1 $2)
+        <(git diff --name-status $1 $2 -- . | sed -r "s/^([^[:blank:]]).*\$/\\1/") \
+        <(git diff --stat=120 --color=always $1 $2 -- .)
 }
 
 function _gh_get_branch_issue() {
