@@ -56,8 +56,8 @@ function gsi() {
 }
 
 # commit
-# if branch follows `issue/NUMBER-title` scheme will copy issue ref
-# as conventional commit context
+# if branch follows `NUMBER-title` scheme will copy issue ref as conventional
+# commit context
 function gc() {
     local context=$(_gh_get_branch_issue)
     [[ -n "$context" ]] && printf "(#$context): " | pbcopy

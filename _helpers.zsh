@@ -25,8 +25,7 @@ function _git_pretty_diff() {
 
 function _gh_get_branch_issue() {
     git branch --show-current \
-        | rg '^issue/' \
-        | sed -r 's:^issue/([[:digit:]]+)-.*:\1:'
+        | sed -nr 's:^(issue/)?([[:digit:]]+)-.*:\2:p'
 }
 
 function _gh_get_issue_title() {
@@ -36,7 +35,7 @@ function _gh_get_issue_title() {
 }
 
 function _gh_get_branch_name_for_issue() {
-    echo "issue/$1-$(_gh_get_issue_title $1 \
+    echo "$1-$(_gh_get_issue_title $1 \
         | tr ' ' '-' \
         | tr -cd '[:alnum:]-' \
         | tr '[:upper:]' '[:lower:]' \

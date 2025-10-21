@@ -1,6 +1,6 @@
 # list GitHub issues
 # - GDF_GHI_CPNUM    copies #issue-number
-# - GDF_GHI_BRANCH   creates/checks out branch by `issue/NUMBER-title` scheme
+# - GDF_GHI_BRANCH   creates/checks out branch by `NUMBER-title` scheme
 # - return           opens issue in browser
 function ghi() {
     local out key issue
@@ -61,10 +61,10 @@ function ghir() {
 }
 
 # if PR exists for branch, open PR. if not:
-# create PR for current branch that follows `issue/NUMBER-title` scheme.  uses
-# issue title as PR title and adds PR body to close issue. if branch doesn't
-# follow scheme, uses branch name as title and empty body. opens created PR in
-# browser.
+# create PR for current branch that follows `(issue/)?NUMBER-title` scheme.
+# uses issue title as PR title and adds PR body to close issue. if branch
+# doesn't follow scheme, uses branch name as title and empty body. opens
+# created PR in browser.
 function ghpr() {
     gh pr view --web 2>/dev/null && return
 
